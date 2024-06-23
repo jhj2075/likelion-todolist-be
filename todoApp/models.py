@@ -4,7 +4,7 @@ from userApp.models import User
 # Create your models here.
 class Todo(models.Model):
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='todos')
     date = models.DateTimeField()
     content = models.TextField()
     is_checked = models.BooleanField(default=False)
