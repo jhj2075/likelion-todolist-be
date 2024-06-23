@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1','localhost',
     'ec2-43-203-128-191.ap-northeast-2.compute.amazonaws.com',
-    '43.203.128.191'    
+    '43.203.128.191',   
     ]
 
 
@@ -44,9 +44,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'todoApp',
     'userApp',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,6 +57,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# 모든 origin을 허용한다는 의미 => 실제 배포에서 이렇게 하면 안됨
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'todolist.urls'
 
