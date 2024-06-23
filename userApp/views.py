@@ -33,7 +33,7 @@ class Login(APIView):
         # 사용자에게 username, password 받음
         username = request.data.get("username")
         password = request.data.get("password")
-        if not username or password:
+        if not username or not password:
             raise ParseError("username 또는 password가 필요합니다.")
         
         # 유저 객체 가져옴
