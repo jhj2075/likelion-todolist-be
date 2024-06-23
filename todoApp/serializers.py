@@ -16,3 +16,25 @@ class TodoSerializer(serializers.ModelSerializer):
             'is_checked',
             'emoji',
         ]
+
+class TodoDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Todo
+        fields = [
+            'date',
+            'content',
+        ]
+
+class TodoCheckSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Todo
+        fields = [
+            'is_checked',
+        ]
+
+class TodoReviewsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Todo
+        fields = [
+            'emoji',
+        ]

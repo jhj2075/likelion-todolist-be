@@ -20,5 +20,7 @@ from . import views
 
 urlpatterns = [
     path("<int:user_id>", views.Todos.as_view()),
-    path("<int:user_id>/<int:todo_id>", views.TodoDetailView.as_view())
+    path("<int:user_id>/<int:todo_id>", views.TodoDetailView.as_view()),
+    path("<int:user_id>/<int:todo_id>/check", views.TodoCheckView.as_view()),
+    path("<int:user_id>/<int:todo_id>/reviews", views.TodoReviewsView.as_view())
 ]

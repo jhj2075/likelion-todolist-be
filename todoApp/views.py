@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ParseError
 from rest_framework import status
 from .models import Todo, User
-from .serializers import TodoSerializer
+from .serializers import TodoSerializer, TodoDetailSerializer, TodoCheckSerializer, TodoReviewsSerializer
 # Create your views here.
 
 class Todos(APIView):
@@ -71,9 +71,10 @@ class TodoDetailView(APIView):
         todo = self.get_todo(user_id, todo_id)
         user = User.objects.get(id=user_id)
 
-        serializer = TodoSerializer(todo, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save(
+        serializer = TodoSerializer(todo)
+        detailserializer = TodoDetailSerializer(todo, data=request.data, partial=True)
+        if detailserializer.is_valid():
+            detailserializer.save(
                 user=user
             )
             return Response(serializer.data)
@@ -85,3 +86,67 @@ class TodoDetailView(APIView):
 
         todo.delete()
         return Response({"detail": "삭제 성공"}, status=status.HTTP_204_NO_CONTENT)
+    
+class TodoCheckView(APIView):
+    def get_todo(self, user_id, todo_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise NotFound("유저를 찾을 수 없습니다.")
+        
+        try:
+            return user.todos.get(id=todo_id)
+        except Todo.DoesNotExist:
+            raise NotFound("To Do를 찾을 수 없습니다.")
+        
+    def get(self, request, user_id, todo_id):
+        todo = self.get_todo(user_id, todo_id)
+
+        serializer = TodoSerializer(todo)
+        return Response(serializer.data)
+    
+    def patch(self, request, user_id, todo_id):
+        todo = self.get_todo(user_id, todo_id)
+        user = User.objects.get(id=user_id)
+
+        serializer = TodoSerializer(todo)
+        checkserializer = TodoCheckSerializer(todo, data=request.data, partial=True)
+        if checkserializer.is_valid():
+            checkserializer.save(
+                user=user
+            )
+            return Response(serializer.data)
+        else:
+            raise ParseError
+
+class TodoReviewsView(APIView):
+    def get_todo(self, user_id, todo_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise NotFound("유저를 찾을 수 없습니다.")
+        
+        try:
+            return user.todos.get(id=todo_id)
+        except Todo.DoesNotExist:
+            raise NotFound("To Do를 찾을 수 없습니다.")
+        
+    def get(self, request, user_id, todo_id):
+        todo = self.get_todo(user_id, todo_id)
+
+        serializer = TodoSerializer(todo)
+        return Response(serializer.data)
+    
+    def patch(self, request, user_id, todo_id):
+        todo = self.get_todo(user_id, todo_id)
+        user = User.objects.get(id=user_id)
+
+        serializer = TodoSerializer(todo)
+        reviewsserializer = TodoReviewsSerializer(todo, data=request.data, partial=True)
+        if reviewsserializer.is_valid():
+            reviewsserializer.save(
+                user=user
+            )
+            return Response(serializer.data)
+        else:
+            raise ParseError
