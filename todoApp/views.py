@@ -32,10 +32,7 @@ class Todos(APIView):
             date__day=day,
             user=user
         )
-        serializer = TodoSerializer(
-            todos,
-            many=True
-        )
+        serializer = TodoSerializer(todos, many=True)
         return Response(serializer.data)
     
     def post(self, request, user_id):
@@ -98,12 +95,6 @@ class TodoCheckView(APIView):
             return user.todos.get(id=todo_id)
         except Todo.DoesNotExist:
             raise NotFound("To Do를 찾을 수 없습니다.")
-        
-    def get(self, request, user_id, todo_id):
-        todo = self.get_todo(user_id, todo_id)
-
-        serializer = TodoSerializer(todo)
-        return Response(serializer.data)
     
     def patch(self, request, user_id, todo_id):
         todo = self.get_todo(user_id, todo_id)
@@ -130,12 +121,6 @@ class TodoReviewsView(APIView):
             return user.todos.get(id=todo_id)
         except Todo.DoesNotExist:
             raise NotFound("To Do를 찾을 수 없습니다.")
-        
-    def get(self, request, user_id, todo_id):
-        todo = self.get_todo(user_id, todo_id)
-
-        serializer = TodoSerializer(todo)
-        return Response(serializer.data)
     
     def patch(self, request, user_id, todo_id):
         todo = self.get_todo(user_id, todo_id)
