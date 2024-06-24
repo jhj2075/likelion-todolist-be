@@ -37,7 +37,7 @@ class Todos(APIView):
     
     def post(self, request, user_id):
         serializer = TodoSerializer(data=request.data)
-        if serializer.is_vaild():
+        if serializer.is_valid():
             user = self.get_user(user_id)
             serializer.save(
                 user=user
