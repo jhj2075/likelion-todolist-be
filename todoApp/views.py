@@ -25,7 +25,7 @@ class Todos(APIView):
 
         day = request.query_params.get("day", current_day)
         day = int(day)
-
+        
         user = self.get_user(user_id)
         todos = Todo.objects.filter(
             date__month=month,
@@ -135,3 +135,54 @@ class TodoReviewsView(APIView):
             return Response(serializer.data)
         else:
             raise ParseError
+        
+class TodoSortView(APIView):
+    def get_user(self, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise NotFound("유저를 찾을 수 없습니다.")
+        return user
+    
+    def get(self, request, user_id):
+        now = timezone.localtime(timezone.now())
+        current_month = now.month
+        current_day = now.day
+        
+        month = request.query_params.get("month", current_month)
+        month = int(month)
+
+        day = request.query_params.get("day", current_day)
+        day = int(day)
+        
+        user = self.get_user(user_id)
+        todos = Todo.objects.filter(
+            date__month=month,
+            date__day=day,
+            user=user
+        ).order_by('content')
+        serializer = TodoSerializer(todos, many=True)
+        return Response(serializer.data)
+    
+class TodoSearchView(APIView):
+    def get_user(self, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise NotFound("유저를 찾을 수 없습니다.")
+        return user
+    
+    def get(self, request, user_id):
+        now = timezone.localtime(timezone.now())
+        current_month = now.month
+        
+        month = request.query_params.get("month", current_month)
+        month = int(month)
+        
+        user = self.get_user(user_id)
+        todos = Todo.objects.filter(
+            date__month=month,
+            user=user
+        )
+        serializer = TodoSerializer(todos, many=True)
+        return Response(serializer.data)
